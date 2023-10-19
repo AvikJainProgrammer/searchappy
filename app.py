@@ -3,8 +3,11 @@ import json
 import requests
 import os
 from dotenv import load_dotenv
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 project_folder = os.path.dirname(__file__)
 
@@ -24,6 +27,7 @@ def index():
     return f"<center><h1>Flask App deployment on AZURE {ENV_ENABLE}, {API_VERSION}, {API_KEY}, {OPENAI_ENGINE}, {OPENAI_URL}, {COGNITIVE_SEARCH_ENDPOINT}, {COGNITIVE_SEARCH_KEY}, {COGNITIVE_SEARCH_INDEX_NAME}</h1></center"
 
 @app.route("/get_response", methods=["POST"])
+@cross_origin()
 def get_response():
     openai_url = os.getenv('OPENAI_URL');
     url = openai_url
