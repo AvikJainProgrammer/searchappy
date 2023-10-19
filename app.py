@@ -24,17 +24,16 @@ COGNITIVE_SEARCH_INDEX_NAME = os.getenv('COGNITIVE_SEARCH_INDEX_NAME')
 
 @app.route("/")
 def index():
-    return f"<center><h1>Flask App deployment on AZURE {ENV_ENABLE}, {API_VERSION}, {API_KEY}, {OPENAI_ENGINE}, {OPENAI_URL}, {COGNITIVE_SEARCH_ENDPOINT}, {COGNITIVE_SEARCH_KEY}, {COGNITIVE_SEARCH_INDEX_NAME}</h1></center"
+    return f"<center><h1>Flask App deployment on AZURE</h1></center"
 
 @app.route("/get_response", methods=["POST"])
 @cross_origin()
 def get_response():
-    openai_url = os.getenv('OPENAI_URL');
-    url = openai_url
+    url = OPENAI_URL
 
     headers = {
         "Content-Type": "application/json",
-        "api-key": os.getenv('API_KEY'),
+        "api-key": API_KEY,
     }
     user_input = request.get_json().get("message")
 
@@ -43,9 +42,9 @@ def get_response():
             {
                 "type": "AzureCognitiveSearch",
                 "parameters": {
-                    "endpoint": os.getenv('COGNITIVE_SEARCH_ENDPOINT'),
-                    "key": os.getenv('COGNITIVE_SEARCH_KEY'),
-                    "indexName": os.getenv('COGNITIVE_SEARCH_INDEX_NAME'),
+                    "endpoint": COGNITIVE_SEARCH_ENDPOINT,
+                    "key": COGNITIVE_SEARCH_KEY,
+                    "indexName": COGNITIVE_SEARCH_INDEX_NAME,
                     "semanticConfiguration": None,
                     "queryType": "simple",
                     "fieldsMapping": {
@@ -65,7 +64,7 @@ def get_response():
             }
         ],
         "messages": [{"role": "user", "content": user_input}],
-        "deployment": os.getenv('OPENAI_ENGINE'),
+        "deployment": OPENAI_ENGINE,
         "temperature": 0,
         "top_p": 1,
         "max_tokens": 800,
